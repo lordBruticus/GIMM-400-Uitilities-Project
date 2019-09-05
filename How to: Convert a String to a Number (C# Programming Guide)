@@ -1,0 +1,155 @@
+// 1
+
+using System;
+
+public class StringConversion
+{
+    public static void Main()
+    {
+       string input = String.Empty;
+       try
+       {
+           int result = Int32.Parse(input);
+           Console.WriteLine(result);
+       }
+       catch (FormatException)
+       {
+           Console.WriteLine($"Unable to parse '{input}'");
+       }
+       // Output: Unable to parse ''
+
+       try
+       {
+            int numVal = Int32.Parse("-105");
+            Console.WriteLine(numVal);
+       }
+       catch (FormatException e)
+       {
+           Console.WriteLine(e.Message);
+       }
+       // Output: -105
+
+        if (Int32.TryParse("-105", out int j))
+            Console.WriteLine(j);
+        else
+            Console.WriteLine("String could not be parsed.");
+        // Output: -105
+
+        try
+        {
+            int m = Int32.Parse("abc");
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        // Output: Input string was not in a correct format.
+
+        string inputString = "abc";
+        if (Int32.TryParse(inputString, out int numValue))
+            Console.WriteLine(inputString);
+        else
+            Console.WriteLine($"Int32.TryParse could not parse '{inputString}' to an int.");
+        // Output: Int32.TryParse could not parse 'abc' to an int.
+     }
+}
+
+// 2
+
+using System;
+
+public class StringConversion
+{
+    public static void Main()
+    {
+        var str = "  10FFxxx";
+        string numericString = String.Empty;
+        foreach (var c in str) 
+        {
+            // Check for numeric characters (hex in this case) or leading or trailing spaces.
+            if ((c >= '0' && c <= '9') || (Char.ToUpperInvariant(c) >= 'A' && Char.ToUpperInvariant(c) <= 'F') || c == ' ') {
+                numericString = String.Concat(numericString, c.ToString());
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (int.TryParse(numericString, System.Globalization.NumberStyles.HexNumber, null, out int i))
+            Console.WriteLine($"'{str}' --> '{numericString}' --> {i}");
+            // Output: '  10FFxxx' --> '  10FF' --> 4351
+
+        str = "   -10FFXXX";
+        numericString = "";
+        foreach (char c in str) {
+            // Check for numeric characters (0-9), a negative sign, or leading or trailing spaces.
+            if ((c >= '0' && c <= '9') || c == ' ' || c == '-') 
+            {
+                numericString = String.Concat(numericString, c);
+            } else
+                break;
+        }
+        if (int.TryParse(numericString, out int j))
+            Console.WriteLine($"'{str}' --> '{numericString}' --> {j}");
+            // Output: '   -10FFXXX' --> '   -10' --> -10
+    }
+}
+
+// 3
+
+using System;
+
+public class ConvertStringExample1
+{
+    static void Main(string[] args)
+    {
+        int numVal = -1;
+        bool repeat = true;
+
+        while (repeat)
+        {
+            Console.Write("Enter a number between −2,147,483,648 and +2,147,483,647 (inclusive): ");
+
+            string input = Console.ReadLine();
+
+            // ToInt32 can throw FormatException or OverflowException.
+            try
+            {
+                numVal = Convert.ToInt32(input);
+                if (numVal < Int32.MaxValue)
+                {
+                    Console.WriteLine("The new value is {0}", ++numVal);
+                }
+                else
+                {
+                    Console.WriteLine("numVal cannot be incremented beyond its current value");
+                }
+           }
+            catch (FormatException)
+            {
+                Console.WriteLine("Input string is not a sequence of digits.");
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("The number cannot fit in an Int32.");
+            }
+
+            Console.Write("Go again? Y/N: ");
+            string go = Console.ReadLine();
+            if (go.ToUpper() != "Y")
+            {
+                repeat = false;
+            }
+        }
+    }
+}
+// Sample Output:
+//   Enter a number between -2,147,483,648 and +2,147,483,647 (inclusive): 473
+//   The new value is 474
+//   Go again? Y/N: y
+//   Enter a number between -2,147,483,648 and +2,147,483,647 (inclusive): 2147483647
+//   numVal cannot be incremented beyond its current value
+//   Go again? Y/N: y
+//   Enter a number between -2,147,483,648 and +2,147,483,647 (inclusive): -1000
+//   The new value is -999
+//   Go again? Y/N: n
